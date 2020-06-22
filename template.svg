@@ -24,15 +24,15 @@
  guidetolerance="10"
  inkscape:pageopacity="1"
  inkscape:pageshadow="2"
- inkscape:window-width="954"
- inkscape:window-height="1057"
+ inkscape:window-width="1920"
+ inkscape:window-height="1080"
  id="namedview15"
  showgrid="false"
  inkscape:zoom="0.78666667"
- inkscape:cx="173.30508"
+ inkscape:cx="61.440674"
  inkscape:cy="150"
- inkscape:window-x="2600"
- inkscape:window-y="1460"
+ inkscape:window-x="1640"
+ inkscape:window-y="1440"
  inkscape:window-maximized="0"
  inkscape:current-layer="layer1" />
 <defs
@@ -63,7 +63,7 @@
  xml:space="preserve"
  style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:14.11111069px;line-height:1.25;font-family:aakar;-inkscape-font-specification:'aakar, Medium';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
  id="flowRoot1384"
- transform="matrix(0.73659968,0,0,0.73659968,-14.753179,122.72534)"><flowRegion
+ transform="matrix(0.54916249,0,0,0.54916249,2.2312208,156.17823)"><flowRegion
  id="flowRegion1386"
  style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:14.11111069px;font-family:aakar;-inkscape-font-specification:'aakar, Medium';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle"><use
  x="0"
@@ -78,7 +78,7 @@
  style="fill:#ff0000;fill-opacity:1">time1 remaining</flowPara><flowPara
  id="flowPara5281" /><flowPara
  id="flowPara5283"
- style="fill:#000000;fill-opacity:1">next: thing2</flowPara><flowPara
+ style="line-height:1.25;fill:#000000;fill-opacity:1">next: thing2</flowPara><flowPara
  id="flowPara5285"
- style="fill:#000000;fill-opacity:1">for time2 in time3</flowPara></flowRoot></g>
+ style="line-height:1.25;fill:#000000;fill-opacity:1">for time2 in time3</flowPara></flowRoot></g>
 </svg>
