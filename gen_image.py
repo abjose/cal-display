@@ -1,9 +1,12 @@
 # code initially copied from https://developers.google.com/calendar/quickstart/python
-from __future__ import print_function
 from datetime import datetime, timezone
 from dateutil.parser import parse
 import pickle
-import os.path
+import os, os.path
+from PIL import Image
+from cairosvg import svg2png
+from io import BytesIO
+from inky import InkyWHAT
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
@@ -29,6 +32,20 @@ def save_svg(current_task, remaining, next_task, next_task_duration, time_to_nex
         with open("output.svg", "w") as output:
             output.write(data)
 
+def send_to_display():
+    # TODO: do only in python... was having some issues with svg2png
+    os.system("inkscape -z -w 400 -h 300 output.svg -e output.png")
+    img = Image.open("output.png")
+    pal_img = Image.new("P", (1, 1))
+    pal_img.putpalette((255, 255, 255, 0, 0, 0, 255, 0, 0) + (0, 0, 0) * 252)
+    img = img.convert("RGB").quantize(palette=pal_img)
+
+    # send
+    inky_display = InkyWHAT("red")
+    inky_display.set_border(inky_display.RED)
+    inky_display.set_image(img)
+    inky_display.show()
+
 def main():
     """Shows basic usage of the Google Calendar API.
     Prints the start and name of the next 10 events on the user's calendar.
@@ -37,6 +54,7 @@ def main():
     # The file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
+    print("getting calendar data")
     if os.path.exists('token.pickle'):
         with open('token.pickle', 'rb') as token:
             creds = pickle.load(token)
@@ -64,6 +82,7 @@ def main():
                                           orderBy='startTime').execute()
     events = events_result.get('items', [])
 
+    print("generating image")
     now = datetime.now(timezone.utc)
     if not events:
         save_svg("no events found", now-now, "nothing", now-now, now-now)
@@ -87,6 +106,11 @@ def main():
         else:
             # first event is yet to happen
             save_svg("free", start1-now, summary1, end1-start1, start1-now)
+
+    print("sending to display")
+    send_to_display()
+
+    print("done")
 
 
 if __name__ == '__main__':
