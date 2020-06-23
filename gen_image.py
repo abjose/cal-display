@@ -21,6 +21,7 @@ def hours_and_minutes(duration):
     if hours == 0: minutes = max(minutes, 1)
     return f"{hours:02d}:{minutes:02d}"
 
+# Return true if there have been changes to the svg since last time.
 def save_svg(current_task, remaining, next_task, next_task_date, next_task_duration):
     with open("template.svg", "r") as template:
         data = template.read()
@@ -39,10 +40,21 @@ def save_svg(current_task, remaining, next_task, next_task_date, next_task_durat
             datestring += " " + str(next_task_date.time())[:-3]
             data = data.replace("date2", datestring)
         data = data.replace("duration2", hours_and_minutes(next_task_duration))
+        if os.path.exists("output.svg"):
+            with open("output.svg", "r") as old_svg:
+                # check if something has changed
+                # bit hacky - compare to saved svg
+                old_data = old_svg.read()
+                if data == old_data:
+                    print("Aborting, no changes have occurred")
+                    return False
         with open("output.svg", "w") as output:
             output.write(data)
+        return True
 
 def send_to_display():
+
+
     # TODO: do only in python... was having some issues with svg2png
     os.system("inkscape -z -w 400 -h 300 output.svg -e output.png")
     img = Image.open("output.png")
@@ -94,8 +106,9 @@ def main():
 
     print("generating image")
     now = datetime.now(timezone.utc)
+    should_send = True
     if not events:
-        save_svg("no events found", now-now, "nothing", now-now, now-now)
+        should_send = save_svg("no events found", now-now, "nothing", now-now, now-now)
         print('No upcoming events found.')
     else:
         start1 = parse(events[0]['start'].get('dateTime', events[0]['start'].get('date')))
@@ -112,13 +125,14 @@ def main():
 
         if start1 <= now <= end1:
             # first event is currently happening
-            save_svg(summary1, end1-now, summary2, start2, end2-start2)
+            shoudl_send = save_svg(summary1, end1-now, summary2, start2, end2-start2)
         else:
             # first event is yet to happen
-            save_svg("free", start1-now, summary1, start1, end1-start1)
+            should_send = save_svg("free", start1-now, summary1, start1, end1-start1)
 
-    print("sending to display")
-    send_to_display()
+    if should_send:
+        print("sending to display")
+        send_to_display()
 
     print("done")
 
