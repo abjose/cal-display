@@ -23,7 +23,7 @@ def hours_and_minutes(duration):
 
 # Return true if there have been changes to the svg since last time.
 def save_svg(current_task, remaining, next_task, next_task_date, next_task_duration):
-    with open("template.svg", "r") as template:
+    with open(os.path.abspath("template.svg"), "r") as template:
         data = template.read()
         data = data.replace("thing1", current_task)
         if current_task == "free":
@@ -40,24 +40,25 @@ def save_svg(current_task, remaining, next_task, next_task_date, next_task_durat
             datestring += " " + str(next_task_date.time())[:-3]
             data = data.replace("date2", datestring)
         data = data.replace("duration2", hours_and_minutes(next_task_duration))
-        if os.path.exists("output.svg"):
-            with open("output.svg", "r") as old_svg:
+        output_path = os.path.abspath("output.svg")
+        if os.path.exists(output_path):
+            with open(output_path, "r") as old_svg:
                 # check if something has changed
                 # bit hacky - compare to saved svg
                 old_data = old_svg.read()
                 if data == old_data:
                     print("Aborting, no changes have occurred")
                     return False
-        with open("output.svg", "w") as output:
+        with open(output_path, "w") as output:
             output.write(data)
         return True
 
 def send_to_display():
-
-
     # TODO: do only in python... was having some issues with svg2png
-    os.system("inkscape -z -w 400 -h 300 output.svg -e output.png")
-    img = Image.open("output.png")
+    output_svg_path = os.path.abspath("output.svg")
+    output_png_path = os.path.abspath("output.png")
+    os.system(f"inkscape -z -w 400 -h 300 {output_svg_path} -e {output_png_path}")
+    img = Image.open(output_png_path)
     pal_img = Image.new("P", (1, 1))
     pal_img.putpalette((255, 255, 255, 0, 0, 0, 255, 0, 0) + (0, 0, 0) * 252)
     img = img.convert("RGB").quantize(palette=pal_img)
@@ -77,8 +78,9 @@ def main():
     # created automatically when the authorization flow completes for the first
     # time.
     print("getting calendar data")
-    if os.path.exists('token.pickle'):
-        with open('token.pickle', 'rb') as token:
+    pickle_path = os.path.abspath('token.pickle')
+    if os.path.exists(pickle_path):
+        with open(pickle_path, 'rb') as token:
             creds = pickle.load(token)
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
@@ -86,10 +88,10 @@ def main():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials.json', SCOPES)
+                os.path.abspath('credentials.json'), SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
-        with open('token.pickle', 'wb') as token:
+        with open(pickle_path, 'wb') as token:
             pickle.dump(creds, token)
 
     service = build('calendar', 'v3', credentials=creds)
@@ -97,7 +99,7 @@ def main():
     # Call the Calendar API
     now = datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
     cal_id = "primary"
-    with open("calendar_id.txt", "r") as cal_config:
+    with open(os.path.abspath("calendar_id.txt"), "r") as cal_config:
         cal_id = cal_config.read().strip()
     events_result = service.events().list(calendarId=cal_id, timeMin=now,
                                           maxResults=2, singleEvents=True,
