@@ -19,16 +19,26 @@ def hours_and_minutes(duration):
     hours = int(seconds // 3600)
     minutes = int((seconds % 3600) // 60)
     if hours == 0: minutes = max(minutes, 1)
-    return f"{hours:02d}h:{minutes:02d}m"
+    return f"{hours:02d}:{minutes:02d}"
 
-def save_svg(current_task, remaining, next_task, next_task_duration, time_to_next_task):
+def save_svg(current_task, remaining, next_task, next_task_date, next_task_duration):
     with open("template.svg", "r") as template:
         data = template.read()
         data = data.replace("thing1", current_task)
-        data = data.replace("time1", hours_and_minutes(remaining))
+        if current_task == "free":
+            data = data.replace("time1 remaining", "")
+        else:
+            data = data.replace("time1", hours_and_minutes(remaining))
         data = data.replace("thing2", next_task)
-        data = data.replace("time2", hours_and_minutes(next_task_duration))
-        data = data.replace("time3", hours_and_minutes(time_to_next_task))
+        # only show date if not today
+        if next_task_date.date() == datetime.today().date():
+            datestring = " " + str(next_task_date.time())[:-3]
+            data = data.replace("date2", datestring)
+        else:
+            datestring = str(next_task_date.date())[6:]  # date without year
+            datestring += " " + str(next_task_date.time())[:-3]
+            data = data.replace("date2", datestring)
+        data = data.replace("duration2", hours_and_minutes(next_task_duration))
         with open("output.svg", "w") as output:
             output.write(data)
 
@@ -102,10 +112,10 @@ def main():
 
         if start1 <= now <= end1:
             # first event is currently happening
-            save_svg(summary1, end1-now, summary2, end2-start2, start2-now)
+            save_svg(summary1, end1-now, summary2, start2, end2-start2)
         else:
             # first event is yet to happen
-            save_svg("free", start1-now, summary1, end1-start1, start1-now)
+            save_svg("free", start1-now, summary1, start1, end1-start1)
 
     print("sending to display")
     send_to_display()

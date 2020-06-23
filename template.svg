@@ -28,11 +28,11 @@
  inkscape:window-height="1080"
  id="namedview15"
  showgrid="false"
- inkscape:zoom="0.78666667"
- inkscape:cx="61.440674"
- inkscape:cy="150"
- inkscape:window-x="1640"
- inkscape:window-y="1440"
+ inkscape:zoom="1.1125147"
+ inkscape:cx="214.93874"
+ inkscape:cy="185.93564"
+ inkscape:window-x="0"
+ inkscape:window-y="0"
  inkscape:window-maximized="0"
  inkscape:current-layer="layer1" />
 <defs
@@ -45,7 +45,7 @@
 <dc:format>image/svg+xml</dc:format>
 <dc:type
  rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-<dc:title></dc:title>
+<dc:title />
 </cc:Work>
 </rdf:RDF>
 </metadata>
@@ -80,5 +80,5 @@
  id="flowPara5283"
  style="line-height:1.25;fill:#000000;fill-opacity:1">next: thing2</flowPara><flowPara
  id="flowPara5285"
- style="line-height:1.25;fill:#000000;fill-opacity:1">for time2 in time3</flowPara></flowRoot></g>
+ style="line-height:1.25;fill:#000000;fill-opacity:1">date2 for duration2</flowPara></flowRoot></g>
 </svg>
